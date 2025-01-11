@@ -5,12 +5,14 @@ from ui.movie_search_dialog import MovieSearchDialog
 from ui.movie_filter_dialog import MovieFilterDialog
 from ui.history_dialog import HistoryDialog
 from ui.watchlist_dialog import WatchlistDialog
+from services.database import get_watchlist
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("MovieReviewApp")   # ｳｨﾝﾄﾞｳﾀｲﾄﾙ設定
-        self.setMinimumSize(300, 100)           # 最小ｻｲｽﾞ設定
+        self.setWindowTitle("MovieReviewApp")  # ｳｨﾝﾄﾞｳﾀｲﾄﾙ設定
+        self.setMinimumSize(300, 100)  # 最小ｻｲｽﾞ設定
         self.setup_ui()
 
     def setup_ui(self):
@@ -21,7 +23,7 @@ class MainWindow(QMainWindow):
             "History": self.open_history_dialog,
             "Search": self.open_movie_filter_dialog,
             "Watchlist": self.open_watchlist_dialog,
-            "Setting": self.open_settings_dialog
+            "Setting": self.open_settings_dialog,
         }
         # ﾎﾞﾀﾝを作成してﾚｲｱｳﾄに追加
         for name, method in buttons.items():
@@ -64,6 +66,11 @@ class MainWindow(QMainWindow):
 
     def open_watchlist_dialog(self):
         """ｳｫｯﾁﾘｽﾄ"""
+        watchlist = get_watchlist()
+        if not watchlist:
+            QMessageBox.information(self, "Info", "ｳｫｯﾁﾘｽﾄが空です。")
+            return
+
         self.safe_exec_dialog(WatchlistDialog)
 
     def open_settings_dialog(self):

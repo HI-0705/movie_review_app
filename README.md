@@ -15,7 +15,7 @@ Python学習の一環として生成AIにサポートしてもらいながら作
 - バックエンド      ：Python  
 - データベース      ：SQLite  
 - 外部API           ：TMDb API（映画情報の取得）  
-- 生成AI支援        ：ChatGPT
+- 生成AI支援        ：Codeium(VSCode拡張機能)
 
 **ライセンス**  
 このプロジェクトは MIT License のもとで公開されています。  

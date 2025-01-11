@@ -1,7 +1,12 @@
 import requests
 from PyQt6.QtWidgets import (
-    QDialog, QMessageBox, QVBoxLayout, QListWidgetItem,
-    QLabel, QPushButton, QCheckBox
+    QDialog,
+    QMessageBox,
+    QVBoxLayout,
+    QListWidgetItem,
+    QLabel,
+    QPushButton,
+    QCheckBox,
 )
 from services.movie_api import (
     get_movies_genre_list,
@@ -9,16 +14,21 @@ from services.movie_api import (
     get_movie_details,
     get_subscription_providers,
 )
-from services.database import add_to_watchlist, get_watchlist, load_selected_subscriptions
+from services.database import (
+    add_to_watchlist,
+    get_watchlist,
+    load_selected_subscriptions,
+)
 from ui.ui_movie_filter_dialog import Ui_MovieFilterDialog
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt
+
 
 class MovieFilterDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("検索ﾒﾆｭｰ")
-        
+
         # UI設定
         self.ui = Ui_MovieFilterDialog()
         self.ui.setupUi(self)
@@ -48,9 +58,9 @@ class MovieFilterDialog(QDialog):
 
     def search_movies(self):
         """ﾌｨﾙﾀ検索処理"""
-        genre_id = self.ui.genre_combobox.currentData() # ｼﾞｬﾝﾙ
-        year = self.ui.year_combobox.currentText()      # 公開年
-        subscriptions = [                               # ｻﾌﾞｽｸﾁｪｯｸﾎﾞｯｸｽ
+        genre_id = self.ui.genre_combobox.currentData()  # ｼﾞｬﾝﾙ
+        year = self.ui.year_combobox.currentText()  # 公開年
+        subscriptions = [  # ｻﾌﾞｽｸﾁｪｯｸﾎﾞｯｸｽ
             provider_id
             for _, (provider_id, checkbox) in self.subscription_mapping.items()
             if checkbox.isChecked()
@@ -60,7 +70,7 @@ class MovieFilterDialog(QDialog):
             results = search_movies_by_filters(
                 genre=None if genre_id == -1 else genre_id,
                 year=None if year == 0 else year,
-                subscriptions=subscriptions
+                subscriptions=subscriptions,
             )
             self.display_results(results)
         except Exception as e:
@@ -93,7 +103,10 @@ class MovieFilterDialog(QDialog):
         # あらすじとｽﾁﾙ画像を入れた詳細ﾀﾞｲｱﾛｸﾞを表示
         try:
             details = get_movie_details(movie_id)
-            overview = (details.get("overview", "").strip() or "映画のあらすじが見つかりませんでした")
+            overview = (
+                details.get("overview", "").strip()
+                or "映画のあらすじが見つかりませんでした"
+            )
             still_paths = details.get("stills", "").split(",")
             self.create_details_dialog(movie_id, title, overview, still_paths)
         except Exception as e:
@@ -125,7 +138,7 @@ class MovieFilterDialog(QDialog):
         # あらすじ生成
         overview_label = QLabel(overview)
         overview_label.setWordWrap(True)
-        
+
         # ｳｫｯﾁﾘｽﾄﾎﾞﾀﾝ生成
         watchlist_button = QPushButton("ｳｫｯﾁﾘｽﾄに追加")
 
@@ -140,7 +153,9 @@ class MovieFilterDialog(QDialog):
             watchlist_button.setText("ｳｫｯﾁﾘｽﾄに追加済み")
             watchlist_button.setEnabled(False)
         else:
-            watchlist_button.clicked.connect(lambda: self.add_to_watchlist(movie_id, title, watchlist_button))
+            watchlist_button.clicked.connect(
+                lambda: self.add_to_watchlist(movie_id, title, watchlist_button)
+            )
 
         dialog.exec()
 

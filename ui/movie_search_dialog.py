@@ -1,13 +1,18 @@
 from PyQt6.QtWidgets import (
-    QDialog, QVBoxLayout, QLineEdit,
-    QPushButton, QHBoxLayout, QListWidget
-    )
+    QDialog,
+    QVBoxLayout,
+    QLineEdit,
+    QPushButton,
+    QHBoxLayout,
+    QListWidget,
+)
 from PyQt6.QtCore import pyqtSignal
 from services.movie_api import search_movies
 
+
 class MovieSearchDialog(QDialog):
     movie_selected = pyqtSignal(str)
-    
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle("ﾚﾋﾞｭｰ作成")
@@ -34,7 +39,7 @@ class MovieSearchDialog(QDialog):
         layout.addWidget(self.search_input)
         layout.addLayout(top_layout)
         layout.addWidget(self.result_list)
-        
+
         self.setLayout(layout)
 
         # ﾎﾞﾀﾝ押下時のｲﾍﾞﾝﾄ接続
@@ -53,7 +58,7 @@ class MovieSearchDialog(QDialog):
         # 入力された文字列で検索
         results = search_movies(query)
         self.result_list.clear()
-        
+
         # 検索結果をﾘｽﾄへ追加
         if results:
             for movie in results:

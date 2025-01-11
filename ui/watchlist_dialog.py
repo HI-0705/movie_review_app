@@ -1,12 +1,18 @@
 import requests
 from PyQt6.QtWidgets import (
-    QDialog, QVBoxLayout, QPushButton, QLabel,
-    QTableWidget, QTableWidgetItem, QMessageBox
-    )
+    QDialog,
+    QVBoxLayout,
+    QPushButton,
+    QLabel,
+    QTableWidget,
+    QTableWidgetItem,
+    QMessageBox,
+)
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt
 from services.database import get_watchlist, remove_from_watchlist
 from services.movie_api import get_movie_details
+
 
 class WatchlistDialog(QDialog):
     def __init__(self, parent=None):
@@ -28,7 +34,7 @@ class WatchlistDialog(QDialog):
         self.table.setColumnWidth(0, 210)
         self.table.setColumnWidth(1, 80)
         self.table.setColumnWidth(2, 75)
-        
+
         layout.addWidget(self.table)
 
         # ｳｫｯﾁﾘｽﾄ表示
@@ -41,6 +47,7 @@ class WatchlistDialog(QDialog):
 
         if not watchlist:
             QMessageBox.information(self, "Info", "ｳｫｯﾁﾘｽﾄが空です。")
+            self.close()
             return
 
         watchlist = sorted(watchlist, key=lambda x: x[1])  # ﾀｲﾄﾙ昇順ｿｰﾄ
@@ -55,12 +62,16 @@ class WatchlistDialog(QDialog):
 
             # 詳細表示処理
             detail_button = QPushButton("info", self)
-            detail_button.clicked.connect(lambda _, mid=movie_id, t=title: self.show_movie_details(mid, t))
+            detail_button.clicked.connect(
+                lambda _, mid=movie_id, t=title: self.show_movie_details(mid, t)
+            )
             self.table.setCellWidget(row_index, 1, detail_button)
 
             # 削除処理
             delete_button = QPushButton("del", self)
-            delete_button.clicked.connect(lambda _, mid=movie_id: self.delete_from_watchlist(mid))
+            delete_button.clicked.connect(
+                lambda _, mid=movie_id: self.delete_from_watchlist(mid)
+            )
             self.table.setCellWidget(row_index, 2, delete_button)
 
     def show_movie_details(self, movie_id, title):
@@ -72,7 +83,10 @@ class WatchlistDialog(QDialog):
         # 詳細情報取得
         try:
             details = get_movie_details(movie_id)
-            overview = (details.get("overview", "").strip() or "映画の詳細が見つかりませんでした")
+            overview = (
+                details.get("overview", "").strip()
+                or "映画の詳細が見つかりませんでした"
+            )
             still_paths = details.get("stills", "").split(",")
 
         except Exception as e:
@@ -107,7 +121,7 @@ class WatchlistDialog(QDialog):
         layout.addWidget(overview_label)
 
         dialog.exec()
-        self.load_watchlist()   # 再読み込み
+        self.load_watchlist()  # 再読み込み
 
     def delete_from_watchlist(self, movie_id):
         """ｳｫｯﾁﾘｽﾄ削除"""

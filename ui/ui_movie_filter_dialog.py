@@ -2,6 +2,7 @@ from PyQt6 import QtWidgets
 from datetime import datetime
 from services.movie_api import get_movies_genre_list
 
+
 class Ui_MovieFilterDialog:
     def setupUi(self, MovieFilterDialog: QtWidgets.QDialog):
         MovieFilterDialog.setObjectName("MovieFilterDialog")
@@ -28,7 +29,9 @@ class Ui_MovieFilterDialog:
 
     def add_year_combobox(self):
         # 公開年ﾎﾞｯｸｽ
-        self.year_combobox = self.create_combobox("year_combobox", "All-ReleaseYears", -1)
+        self.year_combobox = self.create_combobox(
+            "year_combobox", "All-ReleaseYears", -1
+        )
         current_year = datetime.now().year
         for year in range(current_year, 1949, -1):
             self.year_combobox.addItem(str(year))
@@ -55,7 +58,9 @@ class Ui_MovieFilterDialog:
         self.verticalLayout.addWidget(self.result_list)
 
     @staticmethod
-    def create_combobox(name: str, default_text: str, default_data: int) -> QtWidgets.QComboBox:
+    def create_combobox(
+        name: str, default_text: str, default_data: int
+    ) -> QtWidgets.QComboBox:
         """ｺﾝﾎﾞﾎﾞｯｸｽ作成"""
         combobox = QtWidgets.QComboBox()
         combobox.setObjectName(name)
