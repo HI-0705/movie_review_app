@@ -3,6 +3,7 @@ import unittest
 from unittest.mock import patch, Mock
 from main import main
 
+
 class TestMainFunction(unittest.TestCase):
     @patch("main.init_db")
     @patch("main.MainWindow")
@@ -32,6 +33,7 @@ class TestMainFunction(unittest.TestCase):
         # 終了処理
         mock_app_instance.exec.assert_called_once()
         mock_exit.assert_called_once()
+
 
 if __name__ == "__main__":
     unittest.main()

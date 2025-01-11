@@ -1,10 +1,16 @@
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import (
-    QDialog, QVBoxLayout, QLabel,
-    QLineEdit, QTextEdit, QSpinBox,
-    QPushButton, QMessageBox
+    QDialog,
+    QVBoxLayout,
+    QLabel,
+    QLineEdit,
+    QTextEdit,
+    QSpinBox,
+    QPushButton,
+    QMessageBox,
 )
 from services.database import execute_query
+
 
 class ReviewDialog(QDialog):
     review_updated = pyqtSignal()
@@ -69,13 +75,13 @@ class ReviewDialog(QDialog):
             return
 
         # ﾓｰﾄﾞ別でｸｴﾘを設定
-        if self.review_data:    # 編集
+        if self.review_data:  # 編集
             query = """
             UPDATE reviews SET review = ?, rating = ?, created_at = datetime('now', 'localtime')
             WHERE id = ?
             """
             params = (review, rating, self.review_data[0])
-        else:                   # 新規
+        else:  # 新規
             query = """
             INSERT INTO reviews (title, review, rating, created_at)
             VALUES (?, ?, ?, datetime('now', '+9 hours'))
@@ -94,8 +100,10 @@ class ReviewDialog(QDialog):
     def delete_review(self):
         """ﾚﾋﾞｭｰ削除"""
         confirm = QMessageBox.question(
-            self, "Confirm", "削除しますか？",
-            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+            self,
+            "Confirm",
+            "削除しますか？",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
         )
         if confirm == QMessageBox.StandardButton.Yes:
             try:
